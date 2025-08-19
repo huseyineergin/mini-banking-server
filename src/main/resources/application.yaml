@@ -13,3 +13,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: mini-banking-user
     password: P2LHrNj4RcNwqY
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
