@@ -1,0 +1,15 @@
+server:
+  port: 5000
+
+spring:
+  main:
+    banner-mode: off
+
+  application:
+    name: mini-banking-server
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/mini-banking-db
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: mini-banking-user
+    password: P2LHrNj4RcNwqY
