@@ -16,10 +16,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
 
+  private final JwtService jwtService;
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
-  public User register(RegisterRequest request) {
+  public String register(RegisterRequest request) {
     if (userRepository.existsByUsername(request.getUsername())) {
       throw new UserAlreadyExistsException("Username is already taken.");
     }
@@ -36,10 +37,12 @@ public class UserService {
         .email(request.getEmail())
         .build();
 
-    return userRepository.save(user);
+    userRepository.save(user);
+
+    return jwtService.generateToken(user);
   }
 
-  public User login(LoginRequest request) {
+  public String login(LoginRequest request) {
     User user = userRepository.findByUsername(request.getUsername())
         .orElseThrow(() -> new EntityNotFoundException("Invalid username or password."));
 
@@ -47,6 +50,7 @@ public class UserService {
       throw new EntityNotFoundException("Invalid username or password.");
     }
 
-    return user;
+    return jwtService.generateToken(user);
   }
+
 }
