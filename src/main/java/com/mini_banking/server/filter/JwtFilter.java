@@ -3,14 +3,12 @@ package com.mini_banking.server.filter;
 import java.io.IOException;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import com.mini_banking.server.exception.UnauthorizedException;
 import com.mini_banking.server.service.CustomUserDetailsService;
 import com.mini_banking.server.service.JwtService;
 
@@ -37,36 +35,35 @@ public class JwtFilter extends OncePerRequestFilter {
       throws ServletException, IOException //
   {
     try {
-      final String authHeader = request.getHeader("Authorization");
+      String token = extractToken(request);
 
-      if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-        filterChain.doFilter(request, response);
-        return;
+      if (token != null && jwtService.validateToken(token)) {
+        String username = jwtService.extractUsername(token);
+
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+          UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+          UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+              userDetails, null, userDetails.getAuthorities() //
+          );
+
+          SecurityContextHolder.getContext().setAuthentication(authToken);
+        }
       }
 
-      final String token = authHeader.substring(7);
-
-      if (!jwtService.validateToken(token)) {
-        throw new UnauthorizedException("Unauthorized.");
-      }
-
-      final String username = jwtService.extractUsername(token);
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-      if (username != null && authentication == null) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-            userDetails, null, userDetails.getAuthorities() //
-        );
-        SecurityContextHolder.getContext().setAuthentication(authToken);
-      }
       filterChain.doFilter(request, response);
-
     } catch (Exception ex) {
       handlerExceptionResolver.resolveException(request, response, null, ex);
       return;
     }
+  }
+
+  private String extractToken(HttpServletRequest request) {
+    String header = request.getHeader("Authorization");
+    if (header != null && header.startsWith("Bearer ")) {
+      return header.substring("Bearer ".length());
+    }
+    return null;
   }
 
 }
