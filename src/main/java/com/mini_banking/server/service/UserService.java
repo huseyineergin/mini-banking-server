@@ -20,21 +20,21 @@ public class UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
-  public String register(RegisterDto request) {
-    if (userRepository.existsByUsername(request.getUsername())) {
+  public String register(RegisterDto dto) {
+    if (userRepository.existsByUsername(dto.getUsername())) {
       throw new DataAlreadyExistsException("Username is already taken.");
     }
 
-    if (userRepository.existsByEmail(request.getEmail())) {
+    if (userRepository.existsByEmail(dto.getEmail())) {
       throw new DataAlreadyExistsException("Email is already in use.");
     }
 
-    String encodedPassword = passwordEncoder.encode(request.getPassword());
+    String encodedPassword = passwordEncoder.encode(dto.getPassword());
 
     User user = User.builder()
-        .username(request.getUsername())
+        .username(dto.getUsername())
         .password(encodedPassword)
-        .email(request.getEmail())
+        .email(dto.getEmail())
         .build();
 
     userRepository.save(user);
@@ -42,11 +42,11 @@ public class UserService {
     return jwtService.generateToken(user);
   }
 
-  public String login(LoginDto request) {
-    User user = userRepository.findByUsername(request.getUsername())
+  public String login(LoginDto dto) {
+    User user = userRepository.findByUsername(dto.getUsername())
         .orElseThrow(() -> new EntityNotFoundException("Invalid username or password."));
 
-    if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+    if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
       throw new EntityNotFoundException("Invalid username or password.");
     }
 

@@ -27,8 +27,8 @@ public class UserController {
 
   @PostMapping("/register")
   @Operation(summary = "Register a new user", description = "Registers a new user and returns a JWT token.")
-  public ResponseEntity<ApiResponse<AuthDto>> register(@Valid @RequestBody RegisterDto request) {
-    String token = userService.register(request);
+  public ResponseEntity<ApiResponse<AuthDto>> register(@Valid @RequestBody RegisterDto dto) {
+    String token = userService.register(dto);
     ApiResponse<AuthDto> response = ApiResponse.success(
         "User registered.",
         201,
@@ -39,8 +39,8 @@ public class UserController {
 
   @PostMapping("/login")
   @Operation(summary = "Authenticate a user", description = "Authenticates a user and returns a JWT token.")
-  public ResponseEntity<ApiResponse<AuthDto>> login(@Valid @RequestBody LoginDto request) {
-    String token = userService.login(request);
+  public ResponseEntity<ApiResponse<AuthDto>> login(@Valid @RequestBody LoginDto dto) {
+    String token = userService.login(dto);
     ApiResponse<AuthDto> response = ApiResponse.success(
         "User logged in.",
         200,
