@@ -43,6 +43,7 @@ public class AccountController {
   }
 
   @PostMapping("/search")
+  @Operation(summary = "Search accounts", description = "Search accounts for the authenticated user.")
   public ResponseEntity<ApiResponse<List<Account>>> searchAccounts(@Valid @RequestBody AccountFilterDto dto) {
     List<Account> accounts = accountService.getAccounts(dto);
     ApiResponse<List<Account>> response = ApiResponse.success(
@@ -52,6 +53,7 @@ public class AccountController {
   }
 
   @PutMapping("/{id}")
+  @Operation(summary = "Update an account", description = "Updates the selected account for the authenticated user.")
   public ResponseEntity<ApiResponse<Account>> updateAccount(
       @PathVariable("id") String accountId,
       @Valid @RequestBody UpdateAccountDto dto //
@@ -64,6 +66,7 @@ public class AccountController {
   }
 
   @DeleteMapping("/{id}")
+  @Operation(summary = "Delete an account", description = "Deletes the selected account for the authenticated user.")
   public ResponseEntity<ApiResponse<Void>> deleteAccount(@PathVariable("id") String accountId) {
     accountService.deleteAccount(accountId);
     ApiResponse<Void> response = ApiResponse.success("Account deleted.", 0, null);
@@ -71,6 +74,7 @@ public class AccountController {
   }
 
   @GetMapping("/{id}")
+  @Operation(summary = "Get details of an account", description = "Retrieves details of an account for the authenticated user.")
   public ResponseEntity<ApiResponse<Account>> getAccountDetails(@PathVariable("id") String accountId) {
     Account account = accountService.getAccount(accountId);
     ApiResponse<Account> response = ApiResponse.success("Account found.", 0, account);
