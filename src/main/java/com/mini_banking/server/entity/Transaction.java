@@ -3,6 +3,8 @@ package com.mini_banking.server.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -43,6 +45,7 @@ public class Transaction {
   @Column(nullable = false)
   private BigDecimal amount;
 
+  @CreationTimestamp
   @Column(nullable = false)
   private LocalDateTime transactionDate;
 
