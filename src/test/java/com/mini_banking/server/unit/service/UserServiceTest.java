@@ -1,6 +1,7 @@
 package com.mini_banking.server.unit.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -17,6 +18,8 @@ import com.mini_banking.server.entity.User;
 import com.mini_banking.server.repository.UserRepository;
 import com.mini_banking.server.service.JwtService;
 import com.mini_banking.server.service.UserService;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -35,7 +38,7 @@ public class UserServiceTest {
 
   @Test
   void testLogin_Success() {
-    LoginDto loginRequest = LoginDto.builder()
+    LoginDto loginDto = LoginDto.builder()
         .username("test_username")
         .password("test_password")
         .build();
@@ -45,12 +48,43 @@ public class UserServiceTest {
         .password("encodedPassword")
         .build();
 
-    when(userRepository.findByUsername(loginRequest.getUsername())).thenReturn(Optional.of(user));
-    when(passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())).thenReturn(true);
+    when(userRepository.findByUsername(loginDto.getUsername())).thenReturn(Optional.of(user));
+    when(passwordEncoder.matches(loginDto.getPassword(), user.getPassword())).thenReturn(true);
     when(jwtService.generateToken(user)).thenReturn("test_token");
 
-    String token = userService.login(loginRequest);
+    String token = userService.login(loginDto);
 
     assertEquals("test_token", token);
   }
+
+  @Test
+  void testLogin_UserNotFound() {
+    LoginDto loginDto = LoginDto.builder()
+        .username("test_username")
+        .password("test_password")
+        .build();
+
+    when(userRepository.findByUsername(loginDto.getUsername())).thenReturn(Optional.empty());
+
+    assertThrows(EntityNotFoundException.class, () -> userService.login(loginDto));
+  }
+
+  @Test
+  void testLogin_WrongPassword() {
+    LoginDto loginDto = LoginDto.builder()
+        .username("test_username")
+        .password("test_password")
+        .build();
+
+    User user = User.builder()
+        .username("test_username")
+        .password("encodedPassword")
+        .build();
+
+    when(userRepository.findByUsername("test_username")).thenReturn(Optional.of(user));
+    when(passwordEncoder.matches(loginDto.getPassword(), user.getPassword())).thenReturn(false);
+
+    assertThrows(EntityNotFoundException.class, () -> userService.login(loginDto));
+  }
+
 }
