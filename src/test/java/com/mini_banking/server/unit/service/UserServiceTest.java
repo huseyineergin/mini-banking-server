@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.mini_banking.server.dto.request.LoginRequest;
+import com.mini_banking.server.dto.request.LoginDto;
 import com.mini_banking.server.entity.User;
 import com.mini_banking.server.repository.UserRepository;
 import com.mini_banking.server.service.JwtService;
@@ -35,7 +35,7 @@ public class UserServiceTest {
 
   @Test
   void testLogin_Success() {
-    LoginRequest loginRequest = LoginRequest.builder()
+    LoginDto loginRequest = LoginDto.builder()
         .username("test_username")
         .password("test_password")
         .build();

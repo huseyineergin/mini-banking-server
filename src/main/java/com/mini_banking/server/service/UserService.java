@@ -3,8 +3,8 @@ package com.mini_banking.server.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.mini_banking.server.dto.request.LoginRequest;
-import com.mini_banking.server.dto.request.RegisterRequest;
+import com.mini_banking.server.dto.request.LoginDto;
+import com.mini_banking.server.dto.request.RegisterDto;
 import com.mini_banking.server.entity.User;
 import com.mini_banking.server.exception.UserAlreadyExistsException;
 import com.mini_banking.server.repository.UserRepository;
@@ -20,7 +20,7 @@ public class UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
-  public String register(RegisterRequest request) {
+  public String register(RegisterDto request) {
     if (userRepository.existsByUsername(request.getUsername())) {
       throw new UserAlreadyExistsException("Username is already taken.");
     }
@@ -42,7 +42,7 @@ public class UserService {
     return jwtService.generateToken(user);
   }
 
-  public String login(LoginRequest request) {
+  public String login(LoginDto request) {
     User user = userRepository.findByUsername(request.getUsername())
         .orElseThrow(() -> new EntityNotFoundException("Invalid username or password."));
 
