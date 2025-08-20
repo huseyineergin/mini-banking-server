@@ -87,6 +87,19 @@ public class AccountService {
     return accountRepository.save(account);
   }
 
+  public void deleteAccount(String accountId) {
+    Account account = accountRepository.findById(UUID.fromString(accountId))
+        .orElseThrow(() -> new EntityNotFoundException("Account not found."));
+
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+    if (!account.getUser().getUsername().equals(auth.getName())) {
+      throw new UnauthorizedException("Unauthorized.");
+    }
+
+    accountRepository.deleteById(UUID.fromString(accountId));
+  }
+
   private String generateUniqueAccountNumber() {
     String number;
     do {

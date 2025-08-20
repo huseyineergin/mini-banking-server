@@ -3,6 +3,7 @@ package com.mini_banking.server.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -59,5 +60,12 @@ public class AccountController {
         "Account updated.", 200, account //
     );
     return ResponseEntity.ok(response);
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<ApiResponse<Void>> deleteAccount(@PathVariable("id") String accountId) {
+    accountService.deleteAccount(accountId);
+    ApiResponse<Void> response = ApiResponse.success("Account deleted.", 0, null);
+    return ResponseEntity.status(204).body(response);
   }
 }
