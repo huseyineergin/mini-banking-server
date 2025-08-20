@@ -36,7 +36,9 @@ public class SecurityConfig {
             sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS) //
         )
         .authorizeHttpRequests(
-            auth -> auth.requestMatchers("/api/users/**").permitAll().anyRequest().authenticated() //
+            auth -> auth
+                .requestMatchers("/api/users/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                .anyRequest().authenticated() //
         )
         .build();
   }

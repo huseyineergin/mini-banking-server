@@ -12,17 +12,21 @@ import com.mini_banking.server.dto.request.RegisterDto;
 import com.mini_banking.server.dto.response.AuthDto;
 import com.mini_banking.server.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
+@Tag(name = "Users", description = "User management endpoints.")
 public class UserController {
 
   private final UserService userService;
 
   @PostMapping("/register")
+  @Operation(summary = "Register a new user", description = "Registers a new user and returns a JWT token.")
   public ResponseEntity<ApiResponse<AuthDto>> register(@Valid @RequestBody RegisterDto request) {
     String token = userService.register(request);
     ApiResponse<AuthDto> response = ApiResponse.success(
@@ -34,6 +38,7 @@ public class UserController {
   }
 
   @PostMapping("/login")
+  @Operation(summary = "Authenticate a user", description = "Authenticates a user and returns a JWT token.")
   public ResponseEntity<ApiResponse<AuthDto>> login(@Valid @RequestBody LoginDto request) {
     String token = userService.login(request);
     ApiResponse<AuthDto> response = ApiResponse.success(
