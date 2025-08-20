@@ -9,8 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.mini_banking.server.dto.request.AccountFilterDto;
-import com.mini_banking.server.dto.request.CreateAccountDto;
+import com.mini_banking.server.dto.request.account.AccountFilterDto;
+import com.mini_banking.server.dto.request.account.CreateAccountDto;
 import com.mini_banking.server.entity.Account;
 import com.mini_banking.server.entity.User;
 import com.mini_banking.server.exception.DataAlreadyExistsException;

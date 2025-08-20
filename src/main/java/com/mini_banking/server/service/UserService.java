@@ -3,8 +3,8 @@ package com.mini_banking.server.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.mini_banking.server.dto.request.LoginDto;
-import com.mini_banking.server.dto.request.RegisterDto;
+import com.mini_banking.server.dto.request.authentication.LoginDto;
+import com.mini_banking.server.dto.request.authentication.RegisterDto;
 import com.mini_banking.server.entity.User;
 import com.mini_banking.server.exception.DataAlreadyExistsException;
 import com.mini_banking.server.repository.UserRepository;

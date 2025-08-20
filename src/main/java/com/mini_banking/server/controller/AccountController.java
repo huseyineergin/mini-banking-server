@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mini_banking.server.dto.ApiResponse;
-import com.mini_banking.server.dto.request.AccountFilterDto;
-import com.mini_banking.server.dto.request.CreateAccountDto;
+import com.mini_banking.server.dto.request.account.AccountFilterDto;
+import com.mini_banking.server.dto.request.account.CreateAccountDto;
 import com.mini_banking.server.entity.Account;
 import com.mini_banking.server.service.AccountService;
 

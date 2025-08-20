@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mini_banking.server.dto.ApiResponse;
-import com.mini_banking.server.dto.request.LoginDto;
-import com.mini_banking.server.dto.request.RegisterDto;
+import com.mini_banking.server.dto.request.authentication.LoginDto;
+import com.mini_banking.server.dto.request.authentication.RegisterDto;
 import com.mini_banking.server.dto.response.AuthDto;
 import com.mini_banking.server.service.UserService;
 

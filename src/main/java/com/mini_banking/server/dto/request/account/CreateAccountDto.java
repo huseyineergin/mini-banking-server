@@ -1,4 +1,4 @@
-package com.mini_banking.server.dto.request;
+package com.mini_banking.server.dto.request.account;
 
 import lombok.Builder;
 import lombok.Data;
