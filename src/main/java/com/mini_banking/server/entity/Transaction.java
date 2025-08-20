@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,11 +37,13 @@ public class Transaction {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "from_account_id", nullable = false)
+  @JoinColumn(name = "from_account_id", nullable = true)
+  @OnDelete(action = OnDeleteAction.SET_NULL)
   private Account from;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "to_account_id", nullable = false)
+  @JoinColumn(name = "to_account_id", nullable = true)
+  @OnDelete(action = OnDeleteAction.SET_NULL)
   private Account to;
 
   @Column(nullable = false)
