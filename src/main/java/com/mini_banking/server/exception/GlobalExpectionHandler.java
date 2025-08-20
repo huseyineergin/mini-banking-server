@@ -36,8 +36,8 @@ public class GlobalExpectionHandler {
   @ExceptionHandler(InsufficientBalanceException.class)
   public ResponseEntity<ApiResponse<Void>> handleInsufficientBalanceException(InsufficientBalanceException ex) {
     return ResponseEntity
-        .status(HttpStatus.UNAUTHORIZED)
-        .body(ApiResponse.error(ex.getMessage(), HttpStatus.UNAUTHORIZED.value()));
+        .status(HttpStatus.BAD_REQUEST)
+        .body(ApiResponse.error(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
   }
 
 }
