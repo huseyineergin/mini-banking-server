@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.mini_banking.server.dto.request.LoginDto;
 import com.mini_banking.server.dto.request.RegisterDto;
 import com.mini_banking.server.entity.User;
-import com.mini_banking.server.exception.UserAlreadyExistsException;
+import com.mini_banking.server.exception.DataAlreadyExistsException;
 import com.mini_banking.server.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -22,11 +22,11 @@ public class UserService {
 
   public String register(RegisterDto request) {
     if (userRepository.existsByUsername(request.getUsername())) {
-      throw new UserAlreadyExistsException("Username is already taken.");
+      throw new DataAlreadyExistsException("Username is already taken.");
     }
 
     if (userRepository.existsByEmail(request.getEmail())) {
-      throw new UserAlreadyExistsException("Email is already in use.");
+      throw new DataAlreadyExistsException("Email is already in use.");
     }
 
     String encodedPassword = passwordEncoder.encode(request.getPassword());

@@ -12,8 +12,8 @@ import jakarta.persistence.EntityNotFoundException;
 @RestControllerAdvice
 public class GlobalExpectionHandler {
 
-  @ExceptionHandler(UserAlreadyExistsException.class)
-  public ResponseEntity<ApiResponse<Void>> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
+  @ExceptionHandler(DataAlreadyExistsException.class)
+  public ResponseEntity<ApiResponse<Void>> handleUserAlreadyExistsException(DataAlreadyExistsException ex) {
     return ResponseEntity
         .status(HttpStatus.CONFLICT)
         .body(ApiResponse.error(ex.getMessage(), HttpStatus.CONFLICT.value()));
