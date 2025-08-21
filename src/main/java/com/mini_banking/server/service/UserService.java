@@ -22,7 +22,7 @@ public class UserService {
 
   public String register(RegisterDto dto) {
     if (userRepository.existsByUsername(dto.getUsername())) {
-      throw new DataAlreadyExistsException("Username is already taken.");
+      throw new DataAlreadyExistsException("Username is already in use.");
     }
 
     if (userRepository.existsByEmail(dto.getEmail())) {
