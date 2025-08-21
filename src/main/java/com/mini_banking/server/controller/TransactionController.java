@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mini_banking.server.dto.ApiResponse;
 import com.mini_banking.server.dto.request.transaction.TransferDto;
-import com.mini_banking.server.entity.Transaction;
+import com.mini_banking.server.dto.response.TransactionDto;
 import com.mini_banking.server.service.TransactionService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,9 +28,9 @@ public class TransactionController {
 
   @PostMapping("/transfer")
   @Operation(summary = "Transfer money", description = "Transfers money from one account to another.")
-  public ResponseEntity<ApiResponse<Transaction>> transfer(@RequestBody TransferDto dto) {
-    Transaction transaction = transactionService.transferMoney(dto);
-    ApiResponse<Transaction> response = ApiResponse.success(
+  public ResponseEntity<ApiResponse<TransactionDto>> transfer(@RequestBody TransferDto dto) {
+    TransactionDto transaction = transactionService.transferMoney(dto);
+    ApiResponse<TransactionDto> response = ApiResponse.success(
         "Transaction completed.", 200, transaction //
     );
     return ResponseEntity.ok(response);
@@ -38,9 +38,9 @@ public class TransactionController {
 
   @GetMapping("/account/{accountId}")
   @Operation(summary = "Get transaction history of an account", description = "Retrieves the transaction history for an account.")
-  public ResponseEntity<ApiResponse<List<Transaction>>> getTransactionHistory(@PathVariable String accountId) {
-    List<Transaction> transactions = transactionService.getTransactionHistory(accountId);
-    ApiResponse<List<Transaction>> response = ApiResponse.success(
+  public ResponseEntity<ApiResponse<List<TransactionDto>>> getTransactionHistory(@PathVariable String accountId) {
+    List<TransactionDto> transactions = transactionService.getTransactionHistory(accountId);
+    ApiResponse<List<TransactionDto>> response = ApiResponse.success(
         "Transactions found.", 200, transactions //
     );
     return ResponseEntity.ok(response);

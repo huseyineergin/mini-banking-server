@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mini_banking.server.dto.request.transaction.TransferDto;
+import com.mini_banking.server.dto.response.TransactionDto;
 import com.mini_banking.server.entity.Account;
 import com.mini_banking.server.entity.Transaction;
 import com.mini_banking.server.exception.InsufficientBalanceException;
@@ -27,7 +28,7 @@ public class TransactionService {
   private final TransactionRepository transactionRepository;
 
   @Transactional(noRollbackFor = InsufficientBalanceException.class)
-  public Transaction transferMoney(TransferDto dto) {
+  public TransactionDto transferMoney(TransferDto dto) {
     Account fromAccount = accountRepository.findByNumberForUpdate(dto.getFromAccountNumber())
         .orElseThrow(() -> new EntityNotFoundException("Sender account not found."));
 
@@ -59,10 +60,12 @@ public class TransactionService {
     accountRepository.save(toAccount);
 
     transaction.setStatus(Transaction.TransactionStatus.SUCCESS);
-    return transactionRepository.save(transaction);
+    Transaction savedTx = transactionRepository.save(transaction);
+
+    return mapToDto(savedTx);
   }
 
-  public List<Transaction> getTransactionHistory(String accountId) {
+  public List<TransactionDto> getTransactionHistory(String accountId) {
     Account account = accountRepository.findById(UUID.fromString(accountId))
         .orElseThrow(() -> new EntityNotFoundException("Account not found."));
 
@@ -72,6 +75,20 @@ public class TransactionService {
       throw new UnauthorizedException("Unauthorized.");
     }
 
-    return transactionRepository.findByAccountId(UUID.fromString(accountId));
+    return transactionRepository.findByAccountId(UUID.fromString(accountId))
+        .stream()
+        .map(this::mapToDto)
+        .toList();
+  }
+
+  private TransactionDto mapToDto(Transaction tx) {
+    return TransactionDto.builder()
+        .id(tx.getId())
+        .fromAccountNumber(tx.getFrom() != null ? tx.getFrom().getNumber() : null)
+        .toAccountNumber(tx.getTo() != null ? tx.getTo().getNumber() : null)
+        .amount(tx.getAmount())
+        .transactionDate(tx.getTransactionDate())
+        .status(tx.getStatus().name())
+        .build();
   }
 }
