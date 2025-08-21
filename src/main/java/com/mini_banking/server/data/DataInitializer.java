@@ -30,14 +30,28 @@ public class DataInitializer {
             .email("john.doe@example.com")
             .build();
 
-        Account account = Account.builder()
+        Account account1 = Account.builder()
             .number("1000000000")
-            .name("Work")
+            .name("TRY")
             .balance(BigDecimal.valueOf(10000))
             .user(user)
             .build();
 
-        user.setAccounts(List.of(account));
+        Account account2 = Account.builder()
+            .number("1000000001")
+            .name("USD")
+            .balance(BigDecimal.valueOf(12500))
+            .user(user)
+            .build();
+
+        Account account3 = Account.builder()
+            .number("1000000002")
+            .name("EUR")
+            .balance(BigDecimal.valueOf(15000))
+            .user(user)
+            .build();
+
+        user.setAccounts(List.of(account1, account2, account3));
 
         userRepository.save(user);
       }
@@ -49,14 +63,28 @@ public class DataInitializer {
             .email("jane.doe@example.com")
             .build();
 
-        Account account = Account.builder()
+        Account account1 = Account.builder()
             .number("2000000000")
-            .name("Personal")
+            .name("GBP")
+            .balance(BigDecimal.valueOf(17500))
+            .user(user)
+            .build();
+
+        Account account2 = Account.builder()
+            .number("2000000001")
+            .name("AUD")
             .balance(BigDecimal.valueOf(20000))
             .user(user)
             .build();
 
-        user.setAccounts(List.of(account));
+        Account account3 = Account.builder()
+            .number("2000000002")
+            .name("CAD")
+            .balance(BigDecimal.valueOf(22500))
+            .user(user)
+            .build();
+
+        user.setAccounts(List.of(account1, account2, account3));
 
         userRepository.save(user);
       }
