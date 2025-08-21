@@ -69,8 +69,10 @@ public class AccountController {
   @Operation(summary = "Delete an account", description = "Deletes the selected account for the authenticated user.")
   public ResponseEntity<ApiResponse<Void>> deleteAccount(@PathVariable("id") String accountId) {
     accountService.deleteAccount(accountId);
-    ApiResponse<Void> response = ApiResponse.success("Account deleted.", 0, null);
-    return ResponseEntity.status(204).body(response);
+    ApiResponse<Void> response = ApiResponse.success(
+        "Account deleted.", 0, null //
+    );
+    return ResponseEntity.ok(response);
   }
 
   @GetMapping("/{id}")
