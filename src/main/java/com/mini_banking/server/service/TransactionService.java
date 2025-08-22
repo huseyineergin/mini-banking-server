@@ -14,6 +14,7 @@ import com.mini_banking.server.entity.Account;
 import com.mini_banking.server.entity.Transaction;
 import com.mini_banking.server.exception.InsufficientBalanceException;
 import com.mini_banking.server.exception.UnauthorizedException;
+import com.mini_banking.server.mapper.TransactionMapper;
 import com.mini_banking.server.repository.AccountRepository;
 import com.mini_banking.server.repository.TransactionRepository;
 
@@ -62,7 +63,7 @@ public class TransactionService {
     transaction.setStatus(Transaction.TransactionStatus.SUCCESS);
     Transaction savedTx = transactionRepository.save(transaction);
 
-    return mapToDto(savedTx);
+    return TransactionMapper.toDto(savedTx);
   }
 
   public List<TransactionDto> getTransactionHistory(String accountId) {
@@ -77,18 +78,8 @@ public class TransactionService {
 
     return transactionRepository.findByAccountId(UUID.fromString(accountId))
         .stream()
-        .map(this::mapToDto)
+        .map(TransactionMapper::toDto)
         .toList();
   }
 
-  private TransactionDto mapToDto(Transaction tx) {
-    return TransactionDto.builder()
-        .id(tx.getId())
-        .fromAccountNumber(tx.getFrom() != null ? tx.getFrom().getNumber() : null)
-        .toAccountNumber(tx.getTo() != null ? tx.getTo().getNumber() : null)
-        .amount(tx.getAmount())
-        .transactionDate(tx.getTransactionDate())
-        .status(tx.getStatus().name())
-        .build();
-  }
 }
