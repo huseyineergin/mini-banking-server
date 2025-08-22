@@ -9,10 +9,10 @@ spring:
     name: mini-banking-server
 
   datasource:
-    url: jdbc:mysql://localhost:3306/mini-banking-db
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: mini-banking-user
-    password: P2LHrNj4RcNwqY
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/mini-banking-db
+    driver-class-name: ${DB_DRIVER:com.mysql.cj.jdbc.Driver}
+    username: ${DB_USERNAME:mini-banking-user}
+    password: ${DB_PASSWORD:P2LHrNj4RcNwqY}
 
   jpa:
     hibernate:
@@ -20,5 +20,5 @@ spring:
     show-sql: true
 
 jwt:
-  secret: Zh28h8kvun73MrRyY82fwR3FXMvBUTpd
-  expiration: 3600000 # 1 Hour
+  secret: ${JWT_SECRET:Zh28h8kvun73MrRyY82fwR3FXMvBUTpd}
+  expiration: ${JWT_EXPIRATION:3600000}
