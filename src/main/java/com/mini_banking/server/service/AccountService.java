@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 
 import com.mini_banking.server.dto.request.account.CreateAccountDto;
 import com.mini_banking.server.dto.request.account.UpdateAccountDto;
+import com.mini_banking.server.dto.response.AccountDto;
 import com.mini_banking.server.entity.Account;
 import com.mini_banking.server.entity.User;
 import com.mini_banking.server.exception.DataAlreadyExistsException;
 import com.mini_banking.server.exception.UnauthorizedException;
+import com.mini_banking.server.mapper.AccountMapper;
 import com.mini_banking.server.repository.AccountRepository;
 import com.mini_banking.server.repository.UserRepository;
 
@@ -28,7 +30,7 @@ public class AccountService {
   private final UserRepository userRepository;
   private final AccountRepository accountRepository;
 
-  public Account createAccount(CreateAccountDto dto) {
+  public AccountDto createAccount(CreateAccountDto dto) {
     if (accountRepository.findByName(dto.getName()).isPresent()) {
       String.format("Account with the name \"%s\" already exists.", dto.getName());
       throw new DataAlreadyExistsException(
@@ -50,16 +52,20 @@ public class AccountService {
         .user(user)
         .build();
 
-    return accountRepository.save(account);
+    Account savedAccount = accountRepository.save(account);
+    return AccountMapper.toDto(savedAccount);
   }
 
-  public List<Account> getAccounts() {
+  public List<AccountDto> getAccounts() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-    return accountRepository.findByUserUsername(auth.getName());
+    return accountRepository.findByUserUsername(auth.getName())
+        .stream()
+        .map(AccountMapper::toDto)
+        .toList();
   }
 
-  public Account updateAccount(String accountId, UpdateAccountDto dto) {
+  public AccountDto updateAccount(String accountId, UpdateAccountDto dto) {
     Account account = accountRepository.findById(UUID.fromString(accountId))
         .orElseThrow(() -> new EntityNotFoundException("Account not found."));
 
@@ -77,7 +83,8 @@ public class AccountService {
 
     account.setName(dto.getName());
 
-    return accountRepository.save(account);
+    Account savedAccount = accountRepository.save(account);
+    return AccountMapper.toDto(savedAccount);
   }
 
   public void deleteAccount(String accountId) {
@@ -93,7 +100,7 @@ public class AccountService {
     accountRepository.deleteById(UUID.fromString(accountId));
   }
 
-  public Account getAccount(String accountId) {
+  public AccountDto getAccount(String accountId) {
     Account account = accountRepository.findById(UUID.fromString(accountId))
         .orElseThrow(() -> new EntityNotFoundException("Account not found."));
 
@@ -103,7 +110,7 @@ public class AccountService {
       throw new UnauthorizedException("Unauthorized.");
     }
 
-    return account;
+    return AccountMapper.toDto(account);
   }
 
   private String generateUniqueAccountNumber() {
