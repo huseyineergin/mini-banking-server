@@ -5,12 +5,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.mini_banking.server.dto.request.account.AccountFilterDto;
 import com.mini_banking.server.dto.request.account.CreateAccountDto;
 import com.mini_banking.server.dto.request.account.UpdateAccountDto;
 import com.mini_banking.server.entity.Account;
@@ -19,7 +17,6 @@ import com.mini_banking.server.exception.DataAlreadyExistsException;
 import com.mini_banking.server.exception.UnauthorizedException;
 import com.mini_banking.server.repository.AccountRepository;
 import com.mini_banking.server.repository.UserRepository;
-import com.mini_banking.server.repository.specification.AccountSpecification;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -56,14 +53,10 @@ public class AccountService {
     return accountRepository.save(account);
   }
 
-  public List<Account> getAccounts(AccountFilterDto filterDto) {
+  public List<Account> getAccounts() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-    Specification<Account> spec = AccountSpecification.belongsToUser(auth.getName())
-        .and(AccountSpecification.hasNumber(filterDto.getNumber()))
-        .and(AccountSpecification.hasName(filterDto.getName()));
-
-    return accountRepository.findAll(spec);
+    return accountRepository.findByUserUsername(auth.getName());
   }
 
   public Account updateAccount(String accountId, UpdateAccountDto dto) {

@@ -1,5 +1,6 @@
 package com.mini_banking.server.repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,6 +18,8 @@ public interface AccountRepository extends JpaRepository<Account, UUID>, JpaSpec
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   @Query("SELECT a FROM Account a WHERE a.number = :number")
   Optional<Account> findByNumberForUpdate(@Param("number") String number);
+
+  List<Account> findByUserUsername(String username);
 
   Optional<Account> findByNumber(String number);
 

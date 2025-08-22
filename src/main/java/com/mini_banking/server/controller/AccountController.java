@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mini_banking.server.dto.ApiResponse;
-import com.mini_banking.server.dto.request.account.AccountFilterDto;
 import com.mini_banking.server.dto.request.account.CreateAccountDto;
 import com.mini_banking.server.dto.request.account.UpdateAccountDto;
 import com.mini_banking.server.entity.Account;
@@ -44,8 +43,8 @@ public class AccountController {
 
   @PostMapping("/search")
   @Operation(summary = "Search accounts", description = "Search accounts for the authenticated user.")
-  public ResponseEntity<ApiResponse<List<Account>>> searchAccounts(@Valid @RequestBody AccountFilterDto dto) {
-    List<Account> accounts = accountService.getAccounts(dto);
+  public ResponseEntity<ApiResponse<List<Account>>> searchAccounts() {
+    List<Account> accounts = accountService.getAccounts();
     ApiResponse<List<Account>> response = ApiResponse.success(
         "Accounts found.", 200, accounts //
     );
