@@ -12,6 +12,7 @@ import com.mini_banking.server.dto.request.transaction.TransferDto;
 import com.mini_banking.server.dto.response.TransactionDto;
 import com.mini_banking.server.entity.Account;
 import com.mini_banking.server.entity.Transaction;
+import com.mini_banking.server.exception.BadRequestException;
 import com.mini_banking.server.exception.InsufficientBalanceException;
 import com.mini_banking.server.exception.UnauthorizedException;
 import com.mini_banking.server.mapper.TransactionMapper;
@@ -41,6 +42,10 @@ public class TransactionService {
 
     Account toAccount = accountRepository.findByNumberForUpdate(dto.getToAccountNumber())
         .orElseThrow(() -> new EntityNotFoundException("Receiver account not found"));
+
+    if (fromAccount.getNumber() == toAccount.getNumber()) {
+      throw new BadRequestException("Sender and receiver accounts can not be the same.");
+    }
 
     Transaction transaction = Transaction.builder()
         .from(fromAccount)

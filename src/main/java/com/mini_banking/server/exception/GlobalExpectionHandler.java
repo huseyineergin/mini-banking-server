@@ -40,4 +40,11 @@ public class GlobalExpectionHandler {
         .body(ApiResponse.error(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
   }
 
+  @ExceptionHandler(BadRequestException.class)
+  public ResponseEntity<ApiResponse<Void>> handleBadRequestException(BadRequestException ex) {
+    return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(ApiResponse.error(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+  }
+
 }
