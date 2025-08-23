@@ -1,5 +1,6 @@
 server:
   port: 5000
+  shutdown: graceful
 
 spring:
   main:
@@ -13,6 +14,9 @@ spring:
     driver-class-name: ${DB_DRIVER:com.mysql.cj.jdbc.Driver}
     username: ${DB_USERNAME:mini-banking-user}
     password: ${DB_PASSWORD:P2LHrNj4RcNwqY}
+
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
 
   jpa:
     hibernate:
