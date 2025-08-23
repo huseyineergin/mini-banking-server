@@ -2,12 +2,14 @@ package com.mini_banking.server.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.mini_banking.server.dto.ApiResponse;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 
 @RestControllerAdvice
 public class GlobalExpectionHandler {
@@ -45,6 +47,31 @@ public class GlobalExpectionHandler {
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
         .body(ApiResponse.error(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<ApiResponse<Void>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    String errorMessage = ex.getBindingResult()
+        .getFieldErrors()
+        .stream()
+        .findFirst()
+        .map(error -> error.getDefaultMessage())
+        .orElse("Validation failed.");
+    return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(ApiResponse.error(errorMessage, HttpStatus.BAD_REQUEST.value()));
+  }
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ResponseEntity<ApiResponse<Void>> handleConstraintViolation(ConstraintViolationException ex) {
+    String errorMessage = ex.getConstraintViolations()
+        .stream()
+        .findFirst()
+        .map(cv -> cv.getMessage())
+        .orElse("Validation failed.");
+    return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(ApiResponse.error(errorMessage, HttpStatus.BAD_REQUEST.value()));
   }
 
 }
